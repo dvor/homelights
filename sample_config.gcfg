@@ -1,0 +1,13 @@
+; Rename this to config.gcfg, set value and put next to executable
+
+[tokens]
+; Bridge access token used to login.
+bridge = ""
+; Token to openweathermap.org API.
+weather = ""
+[location]
+latitude = 0.0
+longitude = 0.0
+[other]
+; Port used for web status.
+notifierport = ":3000"
