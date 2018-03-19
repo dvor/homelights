@@ -78,17 +78,12 @@ func daemonContext() *daemon.Context {
 func runLoop() {
     for {
         iteration()
-
-        d := timeUtils.nextIterationDuration()
-        log.Print("Sleeping for", d)
-        time.Sleep(d)
     }
 }
 
 func iteration() {
     log.Print("Updating...")
 
-    defer notifier.update()
     notifier.reset()
     notifier.append("Running")
     notifier.append("")
@@ -100,8 +95,10 @@ func iteration() {
 
     if err != nil || len(bridgesOnNetwork) == 0 {
         log.Print("Cannot find bridge, err", err)
-        notifier.append("No bridge")
         time.Sleep(5 * time.Minute)
+
+        notifier.append("No bridge")
+        notifier.update()
         return
     }
 
@@ -115,8 +112,10 @@ func iteration() {
         log.Print("Cannot find lights")
         log.Print("err1", err1)
         log.Print("err2", err2)
-        notifier.append("No lights")
         time.Sleep(5 * time.Minute)
+
+        notifier.append("No lights")
+        notifier.update()
         return
     }
 
@@ -136,4 +135,10 @@ func iteration() {
         light1.Off()
         light2.Off()
     }
+
+    notifier.update()
+
+    d := timeUtils.nextIterationDuration()
+    log.Print("Sleeping for", d)
+    time.Sleep(d)
 }
