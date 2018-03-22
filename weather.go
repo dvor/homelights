@@ -4,7 +4,6 @@ import (
     "encoding/json"
     "fmt"
     "io/ioutil"
-    "log"
     "net/http"
     "time"
 )
@@ -30,20 +29,20 @@ func (w WeatherStruct) weatherConditions() (int, time.Time, time.Time) {
     res, err := http.Get(url)
 
     if err != nil {
-        log.Fatal("Unable to get weather stats: ", err)
+        panic(NewError("Unable to get weather stats:", err))
     }
 
     body, err := ioutil.ReadAll(res.Body)
 
     if err != nil {
-        log.Fatal("Unable to read weather response: ", err)
+        panic(NewError("Unable to read weather response:", err))
     }
 
     var dat map[string]interface{}
     err = json.Unmarshal(body, &dat)
 
     if err != nil {
-        log.Fatal("Unable to parse weather json: ", err)
+        panic(NewError("Unable to parse weather json:", err))
     }
 
     cloudness := dat["clouds"].(map[string]interface{})["all"].(float64)

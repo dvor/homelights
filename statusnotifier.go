@@ -27,7 +27,10 @@ func (s *StatusNotifier) append(v ...interface{}) {
 }
 
 func (s *StatusNotifier) update() {
-    b := []byte(s.msg)
+    t := NewTimeSource().Now()
+    msg := t.Format("15:04:05 02/01/06") + "\n\n" + s.msg
+
+    b := []byte(msg)
     p := s.path + "/status"
 
     err := ioutil.WriteFile(p, b, 0644)

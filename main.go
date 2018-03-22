@@ -53,8 +53,29 @@ func runLoop(config Config, notifier *StatusNotifier) {
     timeUtils := NewTimeUtils()
 
     for {
-        iteration(actionManager, timeUtils, notifier)
+        safeIteration(actionManager, timeUtils, notifier)
     }
+}
+
+func safeIteration(actionManager ActionManager,
+                   timeUtils TimeUtils,
+                   notifier *StatusNotifier) {
+
+    defer func() {
+        if err := recover(); err != nil {
+            notifier.reset()
+            notifier.append("Panic")
+            notifier.append(err)
+            notifier.update()
+
+            log.Print("Panic! Iteration failed with error: ", err)
+            log.Print("Sleeping for 5 minutes")
+
+            time.Sleep(5 * time.Minute)
+        }
+    }()
+
+    iteration(actionManager, timeUtils, notifier)
 }
 
 func iteration(actionManager ActionManager,
@@ -64,20 +85,11 @@ func iteration(actionManager ActionManager,
 
     notifier.reset()
     notifier.append("Running")
-    notifier.append("")
-    t := NewTimeSource().Now()
-    notifier.append(t.Format("15:04:05 02/01/06"))
-    notifier.append("")
 
     bridgesOnNetwork, err := hue.FindBridges()
 
     if err != nil || len(bridgesOnNetwork) == 0 {
-        log.Print("Cannot find bridge, err", err)
-        time.Sleep(5 * time.Minute)
-
-        notifier.append("No bridge")
-        notifier.update()
-        return
+        panic(NewError("Cannot find bridge:", err))
     }
 
     bridge := bridgesOnNetwork[0]
@@ -87,14 +99,7 @@ func iteration(actionManager ActionManager,
     light2, err2 := bridge.GetLightByName("Bird lamp 2")
 
     if err1 != nil || err2 != nil {
-        log.Print("Cannot find lights")
-        log.Print("err1", err1)
-        log.Print("err2", err2)
-        time.Sleep(5 * time.Minute)
-
-        notifier.append("No lights")
-        notifier.update()
-        return
+        panic(NewError("Cannot find lights:", err1, err2))
     }
 
     a := actionManager.currentAction()
