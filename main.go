@@ -3,45 +3,14 @@ package main
 import (
     "github.com/collinux/gohue"
     "github.com/sevlyar/go-daemon"
-    "gopkg.in/gcfg.v1"
     "log"
     "net/http"
     "os"
     "time"
 )
 
-type Config struct {
-    Tokens struct {
-        Bridge string
-        Weather string
-    }
-    Location struct {
-        Latitude float64
-        Longitude float64
-    }
-    Other struct {
-        Notifierport string
-    }
-}
-var config Config
-
-const serverPath = "./html"
-
-var actionManager = NewActionManager()
-var timeUtils = NewTimeUtils()
-var notifier = NewStatusNotifier(serverPath)
 
 func main() {
-    gcfg.ReadFileInto(&config, "config.gcfg")
-
-    if config.Tokens.Bridge == "" {
-        log.Fatal("Please specify the weather token.")
-    }
-
-    if config.Tokens.Weather == "" {
-        log.Fatal("Please specify the bridge api token.")
-    }
-
     cntxt := daemonContext()
     child, err := cntxt.Reborn()
     if err != nil {
@@ -56,7 +25,11 @@ func main() {
     defer log.Print("daemon exited")
     defer cntxt.Release()
 
-    go runLoop()
+    const serverPath = "./html"
+    config := NewConfig()
+    notifier := NewStatusNotifier(serverPath)
+
+    go runLoop(config, &notifier)
 
     os.Mkdir(serverPath, os.ModePerm)
     http.Handle("/homelights/", http.StripPrefix("/homelights/", http.FileServer(http.Dir(serverPath))))
@@ -75,13 +48,18 @@ func daemonContext() *daemon.Context {
     }
 }
 
-func runLoop() {
+func runLoop(config Config, notifier *StatusNotifier) {
+    actionManager := NewActionManager(config, notifier)
+    timeUtils := NewTimeUtils()
+
     for {
-        iteration()
+        iteration(actionManager, timeUtils, notifier)
     }
 }
 
-func iteration() {
+func iteration(actionManager ActionManager,
+               timeUtils TimeUtils,
+               notifier *StatusNotifier) {
     log.Print("Updating...")
 
     notifier.reset()

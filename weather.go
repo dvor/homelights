@@ -14,17 +14,18 @@ type Weather interface {
 }
 
 type WeatherStruct struct {
+    config Config
 }
 
-func NewWeather() Weather {
-    return WeatherStruct{}
+func NewWeather(config Config) Weather {
+    return WeatherStruct{config}
 }
 
 func (w WeatherStruct) weatherConditions() (int, time.Time, time.Time) {
     url := fmt.Sprintf("https://api.openweathermap.org/data/2.5/weather?lat=%v&lon=%v&appid=%v",
-        config.Location.Latitude,
-        config.Location.Longitude,
-        config.Tokens.Weather,
+        w.config.Location.Latitude,
+        w.config.Location.Longitude,
+        w.config.Tokens.Weather,
     )
     res, err := http.Get(url)
 

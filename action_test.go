@@ -2,12 +2,15 @@ package main
 
 import (
     "github.com/stretchr/testify/assert"
+    "io/ioutil"
+    "log"
     "testing"
     "time"
 )
 
 func TestCurrentAction(t *testing.T) {
     assert := assert.New(t)
+    log.SetOutput(ioutil.Discard)
 
     const layout = "02.01.06 15:04:05 -0700"
     midnight, _ := time.Parse(layout, "14.04.18 00:00:00 +0100")
@@ -17,10 +20,11 @@ func TestCurrentAction(t *testing.T) {
         return midnight.Add(d)
     }
 
+    nt := StatusNotifier{}
     ts := TimeSourceMock{midnight}
     tu := TimeUtilsMock{0, midnight, midnight}
     wt := WeatherMock{0, midnight, midnight}
-    am := ActionManager{&ts, &tu, &wt}
+    am := ActionManager{&nt, &ts, &tu, &wt}
 
     tu.wakeUpTime = at("8h")
     tu.sleepTime = at("20h")

@@ -13,16 +13,18 @@ const (
 )
 
 type ActionManager struct {
+    notifier *StatusNotifier
     ts TimeSource
     tu TimeUtils
     wt Weather
 }
 
-func NewActionManager() ActionManager {
+func NewActionManager(config Config, notifier *StatusNotifier) ActionManager {
     return ActionManager{
+        notifier: notifier,
         ts: NewTimeSource(),
         tu: NewTimeUtils(),
-        wt: NewWeather(),
+        wt: NewWeather(config),
     }
 }
 
@@ -32,7 +34,7 @@ func (a ActionManager) currentAction() Action {
     sleep := a.tu.sleepTimeAt(now)
     cloudness, sunrise, sunset := a.wt.weatherConditions()
 
-    notifier.append(cloudness)
+    a.notifier.append(cloudness)
 
     log.Print("Status:")
     log.Print("     Wake up:", wakeUp)
