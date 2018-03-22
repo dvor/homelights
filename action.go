@@ -52,7 +52,7 @@ func (a ActionManager) currentAction() Action {
     }
 
     if now.Before(sunset.Add(-1 * time.Hour)) {
-        if cloudness > kCloudnessThreshold {
+        if cloudness >= kCloudnessThreshold {
             return ActionOn
         }
         return ActionOff
