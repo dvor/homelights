@@ -1,7 +1,6 @@
 package main
 
 import (
-    "github.com/collinux/gohue"
     "github.com/sevlyar/go-daemon"
     "log"
     "net/http"
@@ -78,38 +77,17 @@ func iteration(config Config, notifier *Notifier) {
     notifier.reset()
     notifier.append("Running")
 
-    bridgesOnNetwork, err := hue.FindBridges()
+    bridge := FindBridge(config)
+    room := bridge.room()
 
-    if err != nil || len(bridgesOnNetwork) == 0 {
-        panic(NewError("Cannot find bridge:", err))
-    }
-
-    bridge := bridgesOnNetwork[0]
-    bridge.Login(config.Tokens.Bridge)
-
-    light1, err1 := bridge.GetLightByName("Bird lamp 1")
-    light2, err2 := bridge.GetLightByName("Bird lamp 2")
-
-    if err1 != nil || err2 != nil {
-        panic(NewError("Cannot find lights:", err1, err2))
-    }
-
-    am := NewActionManager(config, notifier)
-    a := am.currentAction()
+    a := NewActionManager(config, notifier).currentAction()
     switch a {
     case ActionOn:
-        log.Print("Lights On")
         notifier.append("On")
-        light1.On()
-        light2.On()
-
-        light1.SetBrightness(100)
-        light2.SetBrightness(100)
+        go room.changeTo(true)
     case ActionOff:
         notifier.append("Off")
-        log.Print("Lights Off")
-        light1.Off()
-        light2.Off()
+        go room.changeTo(false)
     }
 
     notifier.update()

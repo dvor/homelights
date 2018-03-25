@@ -7,6 +7,8 @@ import (
 const (
     kDefaultUpdateInterval = 30 * time.Minute
 
+    kLightChangeDuration = 20 * time.Minute
+
     // Time to wake up, both summer and winter
     kWakeUpTime = 8 * time.Hour
 

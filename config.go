@@ -8,6 +8,9 @@ import (
 var config = NewConfig()
 
 type Config struct {
+    Lights struct {
+        Array []string
+    }
     Tokens struct {
         Bridge string
         Weather string
@@ -25,6 +28,10 @@ func NewConfig() Config {
     var c Config
 
     gcfg.ReadFileInto(&c, "config.gcfg")
+
+    if len(c.Lights.Array) == 0 {
+        log.Fatal("Please set lights array.")
+    }
 
     if c.Tokens.Bridge == "" {
         log.Fatal("Please specify the weather token.")
