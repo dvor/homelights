@@ -20,7 +20,7 @@ func TestCurrentAction(t *testing.T) {
         return midnight.Add(d)
     }
 
-    nt := StatusNotifier{}
+    nt := Notifier{}
     ts := TimeSourceMock{midnight}
     tu := TimeUtilsMock{0, midnight, midnight}
     wt := WeatherMock{0, midnight, midnight}

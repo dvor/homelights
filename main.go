@@ -27,7 +27,7 @@ func main() {
 
     const serverPath = "./html"
     config := NewConfig()
-    notifier := NewStatusNotifier(serverPath)
+    notifier := NewNotifier(serverPath)
 
     go runLoop(config, &notifier)
 
@@ -48,7 +48,7 @@ func daemonContext() *daemon.Context {
     }
 }
 
-func runLoop(config Config, notifier *StatusNotifier) {
+func runLoop(config Config, notifier *Notifier) {
     actionManager := NewActionManager(config, notifier)
     timeUtils := NewTimeUtils()
 
@@ -59,7 +59,7 @@ func runLoop(config Config, notifier *StatusNotifier) {
 
 func safeIteration(actionManager ActionManager,
                    timeUtils TimeUtils,
-                   notifier *StatusNotifier) {
+                   notifier *Notifier) {
 
     defer func() {
         if err := recover(); err != nil {
@@ -80,7 +80,7 @@ func safeIteration(actionManager ActionManager,
 
 func iteration(actionManager ActionManager,
                timeUtils TimeUtils,
-               notifier *StatusNotifier) {
+               notifier *Notifier) {
     log.Print("Updating...")
 
     notifier.reset()

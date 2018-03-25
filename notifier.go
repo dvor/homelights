@@ -6,27 +6,27 @@ import (
     "log"
 )
 
-type StatusNotifier struct {
+type Notifier struct {
     path string
     msg string
 }
 
-func NewStatusNotifier(path string) StatusNotifier {
-    s := StatusNotifier{path: path}
+func NewNotifier(path string) Notifier {
+    s := Notifier{path: path}
     s.reset()
     return s
 }
 
-func (s *StatusNotifier) reset() {
+func (s *Notifier) reset() {
     s.msg = ""
 }
 
-func (s *StatusNotifier) append(v ...interface{}) {
+func (s *Notifier) append(v ...interface{}) {
     str := fmt.Sprint(v...)
     s.msg = s.msg + str + "\n"
 }
 
-func (s *StatusNotifier) update() {
+func (s *Notifier) update() {
     t := NewTimeSource().Now()
     msg := t.Format("15:04:05 02/01/06") + "\n\n" + s.msg
 

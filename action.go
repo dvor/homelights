@@ -13,13 +13,13 @@ const (
 )
 
 type ActionManager struct {
-    notifier *StatusNotifier
+    notifier *Notifier
     ts TimeSource
     tu TimeUtils
     wt Weather
 }
 
-func NewActionManager(config Config, notifier *StatusNotifier) ActionManager {
+func NewActionManager(config Config, notifier *Notifier) ActionManager {
     return ActionManager{
         notifier: notifier,
         ts: NewTimeSource(),
