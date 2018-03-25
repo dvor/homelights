@@ -29,20 +29,22 @@ func (t TimeUtilsStruct) nextIterationDuration() time.Duration {
 
     wake := t.wakeUpTimeAt(now)
     sleep := t.sleepTimeAt(now)
-    halfBS := sleep.Add(-30 * time.Minute)
+    halfBeforeSleep := sleep.Add(-30 * time.Minute)
+    var duration = kDefaultUpdateInterval
 
     if now.Before(wake) {
-        return wake.Sub(now)
-    }
-    if now.After(halfBS) && now.Before(sleep) {
-        return sleep.Sub(now)
-    }
-    if now.After(sleep) {
+        duration = wake.Sub(now)
+    } else if now.After(halfBeforeSleep) && now.Before(sleep) {
+        duration = sleep.Sub(now)
+    } else if now.After(sleep) {
         midnight := time.Date(now.Year(), now.Month(), now.Day(), 0, 0, 0, 0, now.Location())
         till := t.wakeUpTimeAt(midnight.Add(24 * time.Hour))
-        return till.Sub(now)
+        duration = till.Sub(now)
     }
 
+    if duration < kDefaultUpdateInterval {
+        return duration
+    }
     return kDefaultUpdateInterval
 }
 

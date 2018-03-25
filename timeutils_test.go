@@ -35,11 +35,11 @@ func TestNextIteractionDuration(t *testing.T) {
     tu := TimeUtilsStruct{ts: &ts}
 
     res := tu.nextIterationDuration()
-    assert.Equal(res, 8 * time.Hour)
+    assert.Equal(res, 30 * time.Minute)
 
     ts.t = midnight.Add(3 * time.Hour + 27 * time.Minute)
     res = tu.nextIterationDuration()
-    assert.Equal(res, 4 * time.Hour + 33 * time.Minute)
+    assert.Equal(res, 30 * time.Minute)
 
     ts.t = midnight.Add(8 * time.Hour)
     res = tu.nextIterationDuration()
@@ -63,11 +63,11 @@ func TestNextIteractionDuration(t *testing.T) {
 
     ts.t = midnight.Add(21 * time.Hour + 14 * time.Minute + 50 * time.Second)
     res = tu.nextIterationDuration()
-    assert.Equal(res, 10 * time.Hour + 45 * time.Minute + 10 * time.Second)
+    assert.Equal(res, 30 * time.Minute)
 
     ts.t = midnight.Add(23 * time.Hour + 40 * time.Minute)
     res = tu.nextIterationDuration()
-    assert.Equal(res, 8 * time.Hour + 20 * time.Minute)
+    assert.Equal(res, 30 * time.Minute)
 }
 
 func TestSleepTimeAt(t *testing.T) {
