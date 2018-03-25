@@ -49,18 +49,12 @@ func daemonContext() *daemon.Context {
 }
 
 func runLoop(config Config, notifier *Notifier) {
-    actionManager := NewActionManager(config, notifier)
-    timeUtils := NewTimeUtils()
-
     for {
-        safeIteration(actionManager, timeUtils, notifier)
+        safeIteration(config, notifier)
     }
 }
 
-func safeIteration(actionManager ActionManager,
-                   timeUtils TimeUtils,
-                   notifier *Notifier) {
-
+func safeIteration(config Config, notifier *Notifier) {
     defer func() {
         if err := recover(); err != nil {
             notifier.reset()
@@ -75,12 +69,10 @@ func safeIteration(actionManager ActionManager,
         }
     }()
 
-    iteration(actionManager, timeUtils, notifier)
+    iteration(config, notifier)
 }
 
-func iteration(actionManager ActionManager,
-               timeUtils TimeUtils,
-               notifier *Notifier) {
+func iteration(config Config, notifier *Notifier) {
     log.Print("Updating...")
 
     notifier.reset()
@@ -102,7 +94,8 @@ func iteration(actionManager ActionManager,
         panic(NewError("Cannot find lights:", err1, err2))
     }
 
-    a := actionManager.currentAction()
+    am := NewActionManager(config, notifier)
+    a := am.currentAction()
     switch a {
     case ActionOn:
         log.Print("Lights On")
@@ -121,7 +114,7 @@ func iteration(actionManager ActionManager,
 
     notifier.update()
 
-    d := timeUtils.nextIterationDuration()
-    log.Print("Sleeping for", d)
+    d := NewTimeUtils().nextIterationDuration()
+    log.Print("Sleeping for ", d)
     time.Sleep(d)
 }
