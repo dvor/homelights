@@ -1,20 +1,20 @@
 package main
 
 import (
-    "time"
+	"time"
 )
 
 type TimeSource interface {
-    Now() time.Time
+	Now() time.Time
 }
 
 type TimeSourceStruct struct {
 }
 
 func NewTimeSource() TimeSource {
-    return TimeSourceStruct{}
+	return TimeSourceStruct{}
 }
 
 func (t TimeSourceStruct) Now() time.Time {
-    return time.Now()
+	return time.Now()
 }

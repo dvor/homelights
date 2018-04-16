@@ -3,14 +3,14 @@ package main
 import "fmt"
 
 type Error struct {
-    str string
+	str string
 }
 
 func NewError(v ...interface{}) Error {
-    str := fmt.Sprint(v...)
-    return Error{str}
+	str := fmt.Sprint(v...)
+	return Error{str}
 }
 
 func (e Error) Error() string {
-    return e.str
+	return e.str
 }

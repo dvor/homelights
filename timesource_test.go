@@ -1,13 +1,13 @@
 package main
 
 import (
-    "time"
+	"time"
 )
 
 type TimeSourceMock struct {
-    t time.Time
+	t time.Time
 }
 
 func (t TimeSourceMock) Now() time.Time {
-    return t.t
+	return t.t
 }

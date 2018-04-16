@@ -1,15 +1,15 @@
 package main
 
 import (
-    "time"
+	"time"
 )
 
 type WeatherMock struct {
-    cloudness int
-    sunrise time.Time
-    sunset time.Time
+	cloudness int
+	sunrise   time.Time
+	sunset    time.Time
 }
 
 func (w WeatherMock) weatherConditions() (int, time.Time, time.Time) {
-    return w.cloudness, w.sunrise, w.sunset
+	return w.cloudness, w.sunrise, w.sunset
 }
