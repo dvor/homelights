@@ -33,7 +33,9 @@ func (a ActionManager) currentAction() Action {
 	sleep := a.tu.sleepTimeAt(now)
 	cloudness, sunrise, sunset := a.wt.weatherConditions()
 
-	a.notifier.append(cloudness)
+	a.notifier.append("Wake up:   ", wakeUp)
+	a.notifier.append("Sleep:     ", sleep)
+	a.notifier.append("Cloudness: ", cloudness)
 
 	log.Print("Status:")
 	log.Print("     Wake up:", wakeUp)

@@ -80,6 +80,8 @@ func iteration(config Config, notifier *Notifier) {
 	room := bridge.room()
 
 	a := NewActionManager(config, notifier).currentAction()
+	notifier.append()
+
 	switch a {
 	case ActionOn:
 		notifier.append("On")
