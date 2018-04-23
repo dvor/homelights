@@ -19,4 +19,7 @@ const (
 	kSummerSleepTime = 22 * time.Hour
 
 	kCloudnessThreshold = 40
+
+	// Delta to sunset/sunrise to turn lights on.
+	kSunsetDelta = 1*time.Hour + 30*time.Minute
 )

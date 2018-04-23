@@ -132,13 +132,19 @@ func TestCurrentAction(t *testing.T) {
 	assert.Equal(ActionOn, am.currentAction())
 
 	ts.t = at("11h11m")
+	assert.Equal(ActionOn, am.currentAction())
+
+	ts.t = at("11h31m")
 	assert.Equal(ActionOff, am.currentAction())
 
 	ts.t = at("14h")
 	assert.Equal(ActionOff, am.currentAction())
 
-	ts.t = at("16h42m")
+	ts.t = at("16h22m")
 	assert.Equal(ActionOff, am.currentAction())
+
+	ts.t = at("16h42m")
+	assert.Equal(ActionOn, am.currentAction())
 
 	ts.t = at("17h13m")
 	assert.Equal(ActionOn, am.currentAction())

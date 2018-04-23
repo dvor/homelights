@@ -2,7 +2,6 @@ package main
 
 import (
 	"log"
-	"time"
 )
 
 type Action int
@@ -47,11 +46,11 @@ func (a ActionManager) currentAction() Action {
 		return ActionOff
 	}
 
-	if now.Before(sunrise.Add(1 * time.Hour)) {
+	if now.Before(sunrise.Add(kSunsetDelta)) {
 		return ActionOn
 	}
 
-	if now.Before(sunset.Add(-1 * time.Hour)) {
+	if now.Before(sunset.Add(-kSunsetDelta)) {
 		if cloudness >= kCloudnessThreshold {
 			return ActionOn
 		}
