@@ -61,9 +61,8 @@ func safeIteration(config Config, notifier *Notifier) {
 			notifier.update()
 
 			log.Print("Panic! Iteration failed with error: ", err)
-			log.Print("Sleeping for 5 minutes")
-
-			time.Sleep(5 * time.Minute)
+			log.Print("Sleeping for ", kPanicUpdateInterval)
+			time.Sleep(kPanicUpdateInterval)
 		}
 	}()
 

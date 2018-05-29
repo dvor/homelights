@@ -48,7 +48,7 @@ func (a ActionManager) currentAction() Action {
 		return ActionOff
 	}
 
-	if now.Before(sunrise.Add(kSunsetDelta)) {
+	if now.Before(sunrise.Add(kSunriseDelta)) {
 		return ActionOn
 	}
 

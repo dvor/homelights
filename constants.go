@@ -5,9 +5,12 @@ import (
 )
 
 const (
-	kDefaultUpdateInterval = 30 * time.Minute
+	kDefaultUpdateInterval = 20 * time.Minute
 
-	kLightChangeDuration = 20 * time.Minute
+	// Interval to retry after panic.
+	kPanicUpdateInterval = 1 * time.Minute
+
+	kLightChangeDuration = 15 * time.Minute
 
 	// Time to wake up, both summer and winter
 	kWakeUpTime = 8 * time.Hour
@@ -20,6 +23,9 @@ const (
 
 	kCloudnessThreshold = 40
 
-	// Delta to sunset/sunrise to turn lights on.
-	kSunsetDelta = 1*time.Hour + 30*time.Minute
+	// Delta from sunrise to turn lights on.
+	kSunriseDelta = 1*time.Hour + 30*time.Minute
+
+	// Delta to sunset to turn lights on.
+	kSunsetDelta = 2 * time.Hour
 )
