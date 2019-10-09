@@ -21,7 +21,7 @@ const (
 	// Summer time to go to sleep, on 22 June
 	kSummerSleepTime = 22 * time.Hour
 
-	kCloudnessThreshold = 40
+	kCloudnessThreshold = 20
 
 	// Delta from sunrise to turn lights on.
 	kSunriseDelta = 1*time.Hour + 30*time.Minute

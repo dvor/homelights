@@ -1,3 +1,3 @@
 #!/bin/bash
 
-env GOOS=linux GOARCH=arm go build -ldflags "-s -w"
+env GOOS=linux GOARCH=amd64 go build -ldflags "-s -w"
